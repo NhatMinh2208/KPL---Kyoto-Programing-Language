@@ -18,3 +18,12 @@ LC 1
 AD
 J 10
 DCT 2
+
+Thuật toán cho toán tử a%b
+LC a
+CV
+LC b
+DV
+INT 1
+ML
+SB

@@ -14,6 +14,6 @@ Var a : Integer;
   End; *)
 
 Begin
-  a := 3 + 4 * 2**3;
+  a :=  19%6 + 3*2**2;
   call writeI(a);
 End. 

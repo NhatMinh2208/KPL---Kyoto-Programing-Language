@@ -850,6 +850,19 @@ Type* compileTerm4(Type* argType1) {
     genJ(beginLoop); //TOCHANGE
     updateFJ(fjInstruction, getCurrentCodeAddress()); //TOCHANGE
     genDCT(2); //TOCHANGE
+    resultType = compileTerm4(argType1); //TOCHANGE
+    break;
+  case SB_MOD:
+    eat(SB_MOD);
+    genCV(); //TOCHANGE
+    checkIntType(argType1);  //TOCHANGE
+    argType2 = compileFactor(); //TOCHANGE
+    checkIntType(argType2);   //TOCHANGE
+    genDV(); //TOCHANGE
+    genINT(1); //TOCHANGE
+    genML(); //TOCHANGE
+    genSB(); //TOCHANGE
+    resultType = compileTerm4(argType1); //TOCHANGE
     break;
     // check the FOLLOW set
   case SB_PLUS:
@@ -876,7 +889,7 @@ Type* compileTerm4(Type* argType1) {
   default:
     error(ERR_INVALID_TERM, lookAhead->lineNo, lookAhead->colNo);
   }
-    resultType = argType1;
+    return resultType;
 }
 
 Type* compileFactor(void) {
