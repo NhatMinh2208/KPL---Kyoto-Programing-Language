@@ -3,7 +3,7 @@ thì do là kiểu trả về của compileTerm4 là type nên bắt buộc ph�
 
 Chú ý: Khi câu lệnh J hay FJ được thực hiện, t:=t-1
 
-Thuật toán cho toán tử power a**b:
+-Thuật toán cho toán tử power a**b:
 LC a
 CV
 LC 1
@@ -19,7 +19,7 @@ AD
 J 10
 DCT 2
 
-Thuật toán cho toán tử a%b
+-Thuật toán cho toán tử a%b
 LC a
 CV
 LC b
@@ -27,3 +27,13 @@ DV
 INT 1
 ML
 SB
+
+-Thuật toán cho if-else-then expression if a > b then x else y
+LC a 
+LC b
+GT
+FJ L1
+LC x
+J L2
+L1: LC y
+L2:

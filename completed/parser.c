@@ -678,7 +678,9 @@ void compileCondition(void) {
 
 Type* compileExpression(void) {
   Type* type;
-  
+  Type* type2; //TOCHANGE
+  Instruction* fjInstruction; //TOCHANGE
+  Instruction* jInstruction; //TOCHANGE
   switch (lookAhead->tokenType) {
   case SB_PLUS:
     eat(SB_PLUS);
@@ -690,6 +692,19 @@ Type* compileExpression(void) {
     type = compileExpression2();
     checkIntType(type);
     genNEG();
+    break;
+  case KW_IF: //TOCHANGE
+    eat(KW_IF);
+    compileCondition();
+    fjInstruction = genFJ(DC_VALUE);
+    eat(KW_THEN);
+    type = compileExpression();
+    eat(KW_ELSE);
+    jInstruction = genJ(DC_VALUE);
+    updateFJ(fjInstruction, getCurrentCodeAddress());
+    type2 = compileExpression();
+    checkTypeEquality(type, type2);
+    updateJ(jInstruction, getCurrentCodeAddress());
     break;
   default:
     type = compileExpression2();
