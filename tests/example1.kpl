@@ -1,0 +1,17 @@
+program Bai1; 
+
+var n: integer;
+    i: integer;
+    max: integer;
+    a: array(.1000.) of integer;
+
+Begin
+  n := READI; 
+  for i := 1 to n do
+  Begin
+    a(.i.) := readi;
+    if i = 1 then max := a(.i.);
+    if a(.i.) > max then max := a(.i.); 
+  End;
+  call writei(max); 
+End.

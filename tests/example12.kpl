@@ -1,0 +1,23 @@
+Program B1; (* B1 *)
+
+Var x : Integer;
+    y : Integer;
+    t : Integer;
+
+Function sub(n : Integer; m : Integer) : Integer;
+  var a : Integer;
+  
+  Function add(n : Integer ; m : Integer) : Integer;
+  Begin
+    t := m+ n;
+    add := m+ n;
+  End;
+
+  Begin
+    sub := add(m,n) - t;
+  End;
+Begin
+x := readI;
+y := readI;
+x := sub(x, y);
+End. (* B1 *)

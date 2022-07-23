@@ -1,0 +1,28 @@
+Program B1; (* B1 *)
+
+Var x : Integer;
+    y : Integer;
+    m : Integer;
+    n : Integer;
+
+Begin
+   x := readI;
+   y := readI;   
+   if x > y then
+         Begin
+          Call WriteLn; 
+           m := x;
+           n := y;
+           Call WriteLn; 
+         End
+    Else 
+          Begin
+          Call WriteLn; 
+            m := y;
+            n := x;
+            Call WriteLn; 
+          End;
+    Call WriteI(m-n);
+   
+
+End. (* B1 *)

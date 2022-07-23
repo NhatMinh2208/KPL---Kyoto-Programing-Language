@@ -1,0 +1,19 @@
+Program Test; 
+   
+Var a : Integer;
+(*Function F(b: Integer ; n : Integer) : Integer;
+  var i: Integer;
+      a : Integer;
+  Begin
+    a := 1;
+    For i := 1 to n do
+      Begin
+        a := a * b;
+      End;
+    F := a;
+  End; *)
+
+Begin
+  a := 3 + 4 * 2**3;
+  call writeI(a);
+End. 

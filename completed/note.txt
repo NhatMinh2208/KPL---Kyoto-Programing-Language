@@ -1,0 +1,20 @@
+Lỗi: core dump ban đầu
+thì do là kiểu trả về của compileTerm4 là type nên bắt buộc phải return kiểu type or lặp vô hạn
+
+Chú ý: Khi câu lệnh J hay FJ được thực hiện, t:=t-1
+
+Thuật toán cho toán tử power a**b:
+LC a
+CV
+LC 1
+CV 
+LC b
+LT
+JF 20
+DCT 1
+ML
+INT 1
+LC 1
+AD
+J 10
+DCT 2
