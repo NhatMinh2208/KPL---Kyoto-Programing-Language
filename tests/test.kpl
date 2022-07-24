@@ -23,12 +23,17 @@ Begin
   call writeI(a);
   call writeI(b);
   call writeC(c);  *)
-  a := 0;
-  repeat 
-    Begin 
-      a := a + 1;
-      call writeC('F');
-      call writeln;
-    end
-  until a > 3
+  a := readI;
+  switch a
+  Begin
+    case 0:
+      call writeI(0);
+      break
+    case 1:
+      call writeI(1)
+      
+    default:
+      call writeC('L');
+      break
+  end
 End. 

@@ -4,7 +4,7 @@ Dereferencing con trỏ NULL/ chưa được khởi tạo
 
 free node trước khi node = node->next
 
-Chú ý: Khi câu lệnh J hay FJ được thực hiện, t:=t-1
+Chú ý: Khi câu lệnh  FJ được thực hiện, t:=t-1
 
 -Thuật toán cho toán tử power a**b:
 LC a
@@ -16,10 +16,10 @@ LT
 JF 20
 DCT 1
 ML
-INT 1
+INT 2
 LC 1
 AD
-J 10
+J 13
 DCT 2
 
 -Thuật toán cho toán tử a%b

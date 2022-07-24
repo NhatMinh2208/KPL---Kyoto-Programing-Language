@@ -45,6 +45,8 @@ void compileElseSt(void);
 void compileWhileSt(void);
 void compileForSt(void);
 void compileRepeatSt(void); //TOCHANGE
+void compileSwitchSt(void); //TOCHANGE
+
 void compileArgument(Object* param);
 void compileArguments(ObjectNode* paramList);
 void compileCondition(void);

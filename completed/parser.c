@@ -482,6 +482,9 @@ void compileStatement(void) {
   case KW_REPEAT:
     compileRepeatSt();   //TOCHANGE
     break;
+  case KW_SWITCH:
+    compileSwitchSt();   //TOCHANGE
+    break;
     // EmptySt needs to check FOLLOW tokens
   case SB_SEMICOLON:
   case KW_END:
@@ -732,6 +735,70 @@ void compileRepeatSt(void) {
   genFJ(BeginRepeat);
 }
 
+//TOCHANGE
+void compileSwitchSt(void){
+  Type *type, *caseType;
+  Instruction* currentcase_FJ = NULL, *nobreak_J = NULL;
+  InstructionNode* endJInstructions = NULL;
+  eat(KW_SWITCH);
+  type = compileExpression();
+  eat(KW_BEGIN);
+  while(lookAhead->tokenType == KW_CASE){
+    eat(KW_CASE);
+    if(currentcase_FJ != NULL) updateFJ(currentcase_FJ ,getCurrentCodeAddress());
+    genCV();
+    caseType = compileExpression();
+    checkTypeEquality(type, caseType);
+    genEQ();
+    currentcase_FJ = genFJ(DC_VALUE);
+    if(nobreak_J != NULL) updateJ(nobreak_J, getCurrentCodeAddress());
+    eat(SB_COLON);
+    if(lookAhead->tokenType == KW_BREAK){      //compileStatements : from here
+      eat(KW_BREAK);
+      addInstruction(&endJInstructions, genJ(DC_VALUE));
+    }
+    else {compileStatement();}
+    while (lookAhead->tokenType == SB_SEMICOLON) {
+      eat(SB_SEMICOLON);
+      if(lookAhead->tokenType == KW_BREAK){         
+        eat(KW_BREAK);
+        addInstruction(&endJInstructions, genJ(DC_VALUE));
+      }
+      else {compileStatement();}
+    }             // to here
+    nobreak_J = genJ(DC_VALUE);
+  }
+  if(nobreak_J != NULL) updateJ(nobreak_J, getCurrentCodeAddress());
+  if(lookAhead->tokenType == KW_DEFAULT){
+    eat(KW_DEFAULT);
+    eat(SB_COLON);
+    if(currentcase_FJ != NULL) updateFJ(currentcase_FJ ,getCurrentCodeAddress());
+    if(lookAhead->tokenType == KW_BREAK){      //compileStatements : from here
+      eat(KW_BREAK);
+      addInstruction(&endJInstructions, genJ(DC_VALUE));
+    }
+    else {compileStatement();}
+    while (lookAhead->tokenType == SB_SEMICOLON) {
+      eat(SB_SEMICOLON);
+      if(lookAhead->tokenType == KW_BREAK){         
+        eat(KW_BREAK);
+        addInstruction(&endJInstructions, genJ(DC_VALUE));
+      }
+      else {compileStatement();}
+    }             // to here
+  }
+  eat(KW_END);
+  CodeAddress endSwitch = getCurrentCodeAddress();
+  while (endJInstructions!= NULL) {
+    InstructionNode* node = endJInstructions;
+    endJInstructions = endJInstructions->next;
+    updateJ(node->inst, endSwitch);
+    free(node);
+  }
+}
+
+
+
 void compileArgument(Object* param) {
   Type* type;
 
@@ -938,9 +1005,11 @@ Type* compileExpression3(Type* argType1) {
   case SB_GT:
   case SB_RSEL:
   case SB_SEMICOLON:
+  case SB_COLON: //TOCHANGE CASE
   case KW_END:
   case KW_ELSE:
   case KW_THEN:
+  case KW_BEGIN:  //TOCHANGE SWITCH
     resultType = argType1;
     break;
   default:
@@ -998,9 +1067,11 @@ Type* compileTerm2(Type* argType1) {
   case SB_GT:
   case SB_RSEL:
   case SB_SEMICOLON:
+  case SB_COLON: //TOCHANGE CASE
   case KW_END:
   case KW_ELSE:
   case KW_THEN:
+  case KW_BEGIN:  //TOCHANGE SWITCH
     resultType = argType1;
     break;
   default:
@@ -1074,9 +1145,11 @@ Type* compileTerm4(Type* argType1) {
   case SB_GT:
   case SB_RSEL:
   case SB_SEMICOLON:
+  case SB_COLON: //TOCHANGE CASE
   case KW_END:
   case KW_ELSE:
   case KW_THEN:
+  case KW_BEGIN:  //TOCHANGE SWITCH
     resultType = argType1;
     break;
   default:
