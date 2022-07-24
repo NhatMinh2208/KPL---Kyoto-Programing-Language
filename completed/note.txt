@@ -56,3 +56,8 @@ LV c
 ST
 ST
 ST
+
+-Thuật toán cho repeat "statements" until "condition"
+L: statements
+condition
+FJ L

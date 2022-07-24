@@ -16,11 +16,19 @@ Var a : Integer;
   End; *)
 
 Begin
-  a := 1;
+  (* a := 1;
   b := 2;
   c := '3';  
   a, b, c:= 3 + b - 2**4, a-b%2, 'a';
   call writeI(a);
   call writeI(b);
-  call writeC(c);
+  call writeC(c);  *)
+  a := 0;
+  repeat 
+    Begin 
+      a := a + 1;
+      call writeC('F');
+      call writeln;
+    end
+  until a > 3
 End. 

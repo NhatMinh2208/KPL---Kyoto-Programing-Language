@@ -479,6 +479,9 @@ void compileStatement(void) {
   case KW_FOR:
     compileForSt();
     break;
+  case KW_REPEAT:
+    compileRepeatSt();   //TOCHANGE
+    break;
     // EmptySt needs to check FOLLOW tokens
   case SB_SEMICOLON:
   case KW_END:
@@ -716,6 +719,17 @@ void compileForSt(void) {
   updateFJ(fjInstruction, getCurrentCodeAddress());
   genDCT(1);
 
+}
+
+//TOCHANGE
+void compileRepeatSt(void) {
+  CodeAddress BeginRepeat;
+  eat(KW_REPEAT);
+  BeginRepeat = getCurrentCodeAddress();
+  compileStatement();
+  eat(KW_UNTIL);
+  compileCondition();
+  genFJ(BeginRepeat);
 }
 
 void compileArgument(Object* param) {
