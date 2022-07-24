@@ -2,6 +2,7 @@ Program Test;
    
 Var a : Integer;
     b : Integer;
+    c : Char;
 (*Function F(b: Integer ; n : Integer) : Integer;
   var i: Integer;
       a : Integer;
@@ -15,7 +16,11 @@ Var a : Integer;
   End; *)
 
 Begin
-  a :=  19%6 + 3*2**2; 
-  b := if a > 0 then a else -a;
+  a := 1;
+  b := 2;
+  c := '3';  
+  a, b, c:= 3 + b - 2**4, a-b%2, 'a';
+  call writeI(a);
   call writeI(b);
+  call writeC(c);
 End. 

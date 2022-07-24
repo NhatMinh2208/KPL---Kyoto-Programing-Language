@@ -37,6 +37,7 @@ void compileStatements(void);
 void compileStatement(void);
 Type* compileLValue(void);
 void compileAssignSt(void);
+void compileMulAssignSt(void); //TOCHANGE
 void compileCallSt(void);
 void compileGroupSt(void);
 void compileIfSt(void);

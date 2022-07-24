@@ -21,6 +21,96 @@ extern Type* intType;
 extern Type* charType;
 extern SymTab* symtab;
 
+//TOCHANGE
+typedef struct TypeList_{
+  Type *type;
+  struct Typelist_ *next;
+}TypeNode;
+
+void addType(TypeNode **typeList, Type* type) {
+  TypeNode* node = (TypeNode*) malloc(sizeof(TypeNode));
+  node->type = type;
+  node->next = NULL;
+  if ((*typeList) == NULL) 
+    *typeList = node;
+  else {
+    TypeNode *n = *typeList;
+    while (n->next != NULL) 
+      n = n->next;
+    n->next = node;
+  }
+}
+
+void freeTypeList(TypeNode *List) {
+  TypeNode* list = List;
+
+  while (list != NULL) {
+    TypeNode* node = list;
+    list = list->next;
+    //freeType(node->type);
+    free(node);
+  }
+}
+
+typedef struct InstructionList_{
+  Instruction* inst;
+  struct InstructionList_ *next;
+}InstructionNode;
+
+void addInstruction(InstructionNode **instList, Instruction* inst) {
+  InstructionNode* node = (InstructionNode*) malloc(sizeof(InstructionNode));
+  node->inst = inst;
+  node->next = NULL;
+  if ((*instList) == NULL) 
+    *instList = node;
+  else {
+    InstructionNode *n = *instList;
+    while (n->next != NULL) 
+      n = n->next;
+    n->next = node;
+  }
+}
+
+void freeInstructionList(InstructionNode *List) {
+  InstructionNode* list = List;
+
+  while (list != NULL) {
+    InstructionNode* node = list;
+    list = list->next;
+    free(node);
+  }
+}
+
+typedef struct CodeAddressList_{
+  CodeAddress code;
+  struct CodeAddressList_ *next;
+}CodeAddressNode;
+
+void addCodeAdress(CodeAddressNode **codeList, CodeAddress code) {
+  CodeAddressNode* node = (CodeAddressNode*) malloc(sizeof(CodeAddressNode));
+  node->code = code;
+  node->next = NULL;
+  if ((*codeList) == NULL) 
+    *codeList = node;
+  else {
+    CodeAddressNode *n = *codeList;
+    while (n->next != NULL) 
+      n = n->next;
+    n->next = node;
+  }
+}
+
+void freeCodeAdressList(CodeAddressNode *List) {
+  CodeAddressNode* list = List;
+
+  while (list != NULL) {
+    CodeAddressNode* node = list;
+    list = list->next;
+    free(node);
+  }
+}
+//
+
 void scan(void) {
   Token* tmp = currentToken;
   currentToken = lookAhead;
@@ -371,7 +461,8 @@ void compileStatements(void) {
 void compileStatement(void) {
   switch (lookAhead->tokenType) {
   case TK_IDENT:
-    compileAssignSt();
+    //compileAssignSt();
+    compileMulAssignSt();
     break;
   case KW_CALL:
     compileCallSt();
@@ -447,6 +538,79 @@ void compileAssignSt(void) {
   checkTypeEquality(varType, expType);
 
   genST();
+}
+
+//TOCHANGE
+void compileMulAssignSt(void){
+  int line = lookAhead->lineNo, col = lookAhead->colNo;
+  int count = 1, count2 = 0;
+  Instruction* JInstruction; //
+  InstructionNode *JInstructions = NULL,  *TempInstructionNode; //
+  CodeAddressNode *CodeAdresses = NULL, *TempCodeAdressNode; //
+  TypeNode *LValueTypes = NULL, *ExpTypes = NULL;
+  Type* type;
+  type = compileLValue();
+  addType(&LValueTypes, type);
+  JInstruction = genJ(DC_VALUE); //
+  addInstruction(&JInstructions, JInstruction); //
+  while (lookAhead->tokenType == SB_COMMA)
+  {
+    eat(SB_COMMA);
+    addCodeAdress(&CodeAdresses, getCurrentCodeAddress()); //
+    type = compileLValue();
+    addType(&LValueTypes, type);
+    JInstruction = genJ(DC_VALUE); //
+    addInstruction(&JInstructions, JInstruction); //
+    count++;
+  }
+  eat(SB_ASSIGN);
+  TempInstructionNode = JInstructions;
+  updateJ(TempInstructionNode->inst, getCurrentCodeAddress()); 
+  JInstructions = JInstructions->next;
+  free(TempInstructionNode);
+  type = compileExpression(); count2++; 
+  addType(&ExpTypes, type);
+  while (lookAhead->tokenType == SB_COMMA)
+  {
+    if(count2 >= count){
+      count2++;
+      break;
+    }
+    TempCodeAdressNode = CodeAdresses;
+    JInstruction = genJ(TempCodeAdressNode->code);
+    CodeAdresses = CodeAdresses->next;
+    free(TempCodeAdressNode);
+    eat(SB_COMMA);
+    TempInstructionNode = JInstructions;
+    updateJ(TempInstructionNode->inst, getCurrentCodeAddress()); 
+    JInstructions = JInstructions->next;
+    free(TempInstructionNode);
+
+    type = compileExpression();
+    addType(&ExpTypes, type);
+    count2++;
+  }
+  if(count != count2){
+    free(LValueTypes);
+    free(ExpTypes);
+    error(ERR_INVALID_STATEMENT,line,col);
+  } 
+  else{
+    TypeNode *node1 = LValueTypes, *node2 = ExpTypes;
+    while(count > 0){
+      checkTypeEquality(node1->type,node2->type);
+      //TypeNode *temp1 = node1, *temp2 = node2;
+      node1 = node1->next; node2 = node2->next;
+      // freeType(temp1->type); freeType(temp2->type);
+      // free(temp1); free(temp2);
+      count --;
+    }
+    free(LValueTypes);
+    free(ExpTypes);
+  }
+  for(int i = count2; i >= 1; i--){
+    genST();
+  }
 }
 
 void compileCallSt(void) {

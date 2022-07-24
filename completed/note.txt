@@ -1,5 +1,8 @@
 Lỗi: core dump ban đầu
 thì do là kiểu trả về của compileTerm4 là type nên bắt buộc phải return kiểu type or lặp vô hạn
+Dereferencing con trỏ NULL/ chưa được khởi tạo
+
+free node trước khi node = node->next
 
 Chú ý: Khi câu lệnh J hay FJ được thực hiện, t:=t-1
 
@@ -37,3 +40,19 @@ LC x
 J L2
 L1: LC y
 L2:
+
+-Thuật toán cho phép gán đa biến x, y, z := a, b, c
+LA x
+J 51
+LA y
+J 53
+LA z
+J 55
+LV a
+J 47
+LV b
+J 49
+LV c 
+ST
+ST
+ST
